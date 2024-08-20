@@ -9,15 +9,13 @@ environ.Env.read_env()
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True  # If you want to allow all origins
 CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=[
-    'https://merazul.up.railway.app',
-    'https://mdmerazulislam.netlify.app',
+    "https://ocr-8h5r.onrender.com",
     'http://127.0.0.1:5500',
     'http://127.0.0.1:5501',
     'http://localhost:5173',
 ])
 CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[
-    'https://merazul.up.railway.app',
-    'https://mdmerazulislam.netlify.app',
+    'https://ocr-8h5r.onrender.com',
     'https://*.127.0.0.1',
     'http://127.0.0.1:5500',
     'http://127.0.0.1:5501',
@@ -35,7 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = 'django-insecure-!dz2)d)$jhzy+al)9p#a)d__h3m1&^jr+!1cxplnhja3!c_&#x'
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -85,7 +83,7 @@ WSGI_APPLICATION = 'ocr_project.wsgi.application'
 # Database
 DATABASES = {
     'default': dj_database_url.config(
-       default='postgresql://ocr_yd98_user:boX7GL4nzpMElXDWoOzhndwNFVExYknX@dpg-cr29dh0gph6c73biukfg-a.oregon-postgres.render.com/ocr_yd98',
+        default='postgresql://ocr_yd98_user:boX7GL4nzpMElXDWoOzhndwNFVExYknX@dpg-cr29dh0gph6c73biukfg-a.oregon-postgres.render.com/ocr_yd98',
     )
 }
 
