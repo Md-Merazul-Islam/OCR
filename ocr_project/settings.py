@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'ocr_project.wsgi.application'
 # Database
 DATABASES = {
     'default': dj_database_url.config(
-       default='postgresql://postgres:ZmZaiKYMMxLgBhKcgLxOSAljpGxEpkgG@autorack.proxy.rlwy.net:24688/railway',
+       default='postgresql://ocr_yd98_user:boX7GL4nzpMElXDWoOzhndwNFVExYknX@dpg-cr29dh0gph6c73biukfg-a.oregon-postgres.render.com/ocr_yd98',
     )
 }
 
