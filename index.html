@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR App</title>
+</head>
+<body>
+    <h1>OCR Application</h1>
+    <form id="ocr-form">
+        <input type="file" id="image-input" accept="image/*" required>
+        <button type="submit">Upload and Extract Text</button>
+    </form>
+    <h2>Extracted Text:</h2>
+    <pre id="ocr-result"></pre> <!-- This is where the extracted text will be displayed -->
+
+    <script>
+        document.getElementById('ocr-form').addEventListener('submit', async function(event) {
+            event.preventDefault();  // Prevent form from submitting normally
+            const formData = new FormData();  // Create a FormData object to hold the image
+            const imageFile = document.getElementById('image-input').files[0];
+            formData.append('image', imageFile);  // Append the image to the FormData object
+
+            const response = await fetch('http://127.0.0.1:8000/api/ocr/', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();  // Parse the JSON response
+            document.getElementById('ocr-result').textContent = result.text || 'No text extracted';  // Display the extracted text
+        });
+    </script>
+</body>
+</html>
