@@ -1,0 +1,13 @@
+[tool.poetry]
+name = "ocr_project"
+version = "0.1.0"
+description = "hello how care you"
+authors = [merazu76gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+# Add your dependencies here
+
+[tool.poetry.dev-dependencies]
+# Add your dev dependencies here
