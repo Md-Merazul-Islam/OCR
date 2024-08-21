@@ -1,20 +1,21 @@
-# Base image, e.g., Python with Alpine Linux
-FROM python:3.9-slim
+# Use an official Python runtime as a parent image
+FROM python:3.11-slim
 
-# Install Tesseract
-RUN apt-get update && apt-get install -y tesseract-ocr
+# Install Tesseract OCR and other necessary packages
+RUN apt-get update && apt-get install -y tesseract-ocr libtesseract-dev libleptonica-dev
 
-# Set the working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy your application code
-COPY . .
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-# Install any Python dependencies
-RUN pip install -r requirements.txt
+# Install Python dependencies using Poetry (or pip if you're not using Poetry)
+RUN pip install --no-cache-dir poetry
+RUN poetry install --no-root
 
-# Expose the application port
+# Expose the port that the app runs on
 EXPOSE 8000
 
-# Run the application
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Command to run the application
+CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
