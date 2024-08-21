@@ -1,34 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OCR App</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>OCR Application</h1>
     <form id="ocr-form">
-        <input type="file" id="image-input" accept="image/*" required>
-        <button type="submit">Upload and Extract Text</button>
+      <input type="file" id="image-input" accept="image/*" required />
+      <button type="submit">Upload and Extract Text</button>
     </form>
     <h2>Extracted Text:</h2>
-    <pre id="ocr-result"></pre> <!-- This is where the extracted text will be displayed -->
+    <pre id="ocr-result"></pre>
 
     <script>
-        document.getElementById('ocr-form').addEventListener('submit', async function(event) {
-            event.preventDefault();  // Prevent form from submitting normally
-            const formData = new FormData();  // Create a FormData object to hold the image
-            const imageFile = document.getElementById('image-input').files[0];
-            formData.append('image', imageFile);  // Append the image to the FormData object
+      document.getElementById('ocr-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form from submitting the traditional way
+        
+        const input = document.getElementById('image-input');
+        const formData = new FormData();
+        formData.append('file', input.files[0]); // Assuming your API expects the key to be 'file'
 
-            const response = await fetch('http://127.0.0.1:8000/api/ocr/', {
-                method: 'POST',
-                body: formData
-            });
-
-            const result = await response.json();  // Parse the JSON response
-            document.getElementById('ocr-result').textContent = result.text || 'No text extracted';  // Display the extracted text
+        fetch("https://ocr-8h5r.onrender.com/api/", {
+          method: "POST",
+          body: formData,
+        })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          document.getElementById('ocr-result').textContent = data.extracted_text; // Assuming 'extracted_text' is returned by your API
+        })
+        .catch((error) => {
+          console.error("Error:", error.message);
         });
+      });
     </script>
-</body>
+  </body>
 </html>
