@@ -1,21 +1,27 @@
 # Use an official Python runtime as a parent image
-FROM python:3.11-slim
+FROM python:3.11
 
-# Install Tesseract OCR and other necessary packages
-RUN apt-get update && apt-get install -y tesseract-ocr libtesseract-dev libleptonica-dev
+# Install Tesseract OCR
+RUN apt-get update && apt-get install -y \
+    tesseract-ocr \
+    libtesseract-dev \
+    libleptonica-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory in the container
+# Install Poetry
+RUN curl -sSL https://install.python-poetry.org | python3 -
+
+# Set the working directory
 WORKDIR /app
 
 # Copy the current directory contents into the container at /app
 COPY . /app
 
-# Install Python dependencies using Poetry (or pip if you're not using Poetry)
-RUN pip install --no-cache-dir poetry
-RUN poetry install --no-root
+# Install dependencies via Poetry
+RUN poetry install
 
-# Expose the port that the app runs on
+# Expose port
 EXPOSE 8000
 
-# Command to run the application
+# Run the application
 CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]

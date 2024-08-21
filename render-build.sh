@@ -1,7 +1,11 @@
+#!/usr/bin/env bash
 
+# Install Poetry if not already installed
+curl -sSL https://install.python-poetry.org | python3 -
 
-# Update package lists and install Tesseract
-apt-get update && apt-get install -y tesseract-ocr libtesseract-dev libleptonica-dev
+# Install dependencies via Poetry
+poetry install
 
-# Install Python dependencies
-pip install -r requirements.txt
+# Run migrations and start the server
+poetry run python manage.py migrate
+poetry run python manage.py runserver 0.0.0.0:8000
