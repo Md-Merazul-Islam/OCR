@@ -3,42 +3,81 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OCR App</title>
+    <title>Image to Text OCR</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+      }
+      .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+      .container input {
+        margin: 10px 0;
+      }
+      .result {
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #fafafa;
+        max-width: 400px;
+        word-wrap: break-word;
+      }
+    </style>
   </head>
   <body>
-    <h1>OCR Application</h1>
-    <form id="ocr-form">
-      <input type="file" id="image-input" accept="image/*" required />
-      <button type="submit">Upload and Extract Text</button>
-    </form>
-    <h2>Extracted Text:</h2>
-    <pre id="ocr-result"></pre>
+    <div class="container">
+      <h1>Upload Image to Extract Text</h1>
+      <input type="file" id="imageInput" accept="image/*" />
+      <button onclick="uploadImage()">Upload and Extract Text</button>
+      <div id="result" class="result"></div>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-      document.getElementById('ocr-form').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent form from submitting the traditional way
-        
-        const input = document.getElementById('image-input');
-        const formData = new FormData();
-        formData.append('file', input.files[0]); // Assuming your API expects the key to be 'file'
+      function uploadImage() {
+        const imageInput = document.getElementById("imageInput");
+        const resultDiv = document.getElementById("result");
 
-        fetch("https://ocr-8h5r.onrender.com/api/", {
-          method: "POST",
-          body: formData,
-        })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`Server error: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          document.getElementById('ocr-result').textContent = data.extracted_text; // Assuming 'extracted_text' is returned by your API
-        })
-        .catch((error) => {
-          console.error("Error:", error.message);
-        });
-      });
+        if (imageInput.files.length === 0) {
+          resultDiv.innerText = "Please select an image first.";
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("image", imageInput.files[0]);
+
+        axios
+          .post("https://ocr-8h5r.onrender.com/api/ocr/", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((response) => {
+            resultDiv.innerText = response.data.extracted_text;
+          })
+          .catch((error) => {
+            if (error.response && error.response.status === 500) {
+              resultDiv.innerText =
+                "Internal Server Error. Please check the server logs for more details.";
+            } else if (error.response) {
+              resultDiv.innerText = `Error: ${error.response.status} - ${error.response.data.error}`;
+            } else {
+              resultDiv.innerText = `Error: ${error.message}`;
+            }
+          });
+      }
     </script>
   </body>
 </html>
